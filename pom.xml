@@ -1,11 +1,11 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.tuinity</groupId>
-    <artifactId>tuinity-parent</artifactId>
+    <groupId>me.kurumifake</groupId>
+    <artifactId>sustopia-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Tuinity (Parent)</name>
+    <name>Sustopia (Parent)</name>
 
     <repositories>
         <repository>
@@ -16,6 +16,10 @@
             <id>velocity-snapshots</id>
             <url>https://nexus.velocitypowered.com/repository/velocity-artifacts-snapshots/</url>
         </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <build>
@@ -23,8 +27,8 @@
         <finalName>${project.artifactId}</finalName>
     </build>
     <modules>
-        <module>Tuinity-API</module>
-        <module>Tuinity-Server</module>
-        <module>Paper${file.separator}Paper-MojangAPI</module> <!-- We don't plan on patching this, so this hack is good enough. -->
+        <module>Sustopia-API</module>
+        <module>Sustopia-Server</module>
+        <module>Airplane${file.separator}Tuinity${file.separator}Paper${file.separator}Paper-MojangAPI</module> <!-- We don't plan on patching this, so this hack is good enough. -->
     </modules>
 </project>

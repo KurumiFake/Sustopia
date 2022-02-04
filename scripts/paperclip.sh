@@ -8,7 +8,7 @@ set -e
 basedir="$(cd "$1" && pwd -P)"
 workdir="$basedir/Airplane/Tuinity/Paper/work"
 mcver=$(cat "$workdir/BuildData/info.json" | grep minecraftVersion | cut -d '"' -f 4)
-paperjar="$basedir/Sustopia-Server/target/tuinity-$mcver.jar"
+paperjar="$basedir/Sustopia-Server/target/sustopia-$mcver.jar"
 vanillajar="$workdir/Minecraft/$mcver/$mcver.jar"
 
 (

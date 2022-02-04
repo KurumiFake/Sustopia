@@ -1,0 +1,102 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: KurumiFake <kurumiisshidowife@gmail.com>
+Date: Fri, 4 Feb 2022 13:13:16 +0700
+Subject: [PATCH] POM Changes
+
+- rebrand
+- update dependencies
+
+diff --git a/pom.xml b/pom.xml
+index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..01771299be44b8505a7399561ffafabdfa44565d 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -3,18 +3,18 @@
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+     <parent>
+-        <groupId>com.tuinity</groupId>
+-        <artifactId>tuinity-parent</artifactId>
++        <groupId>me.kurumifake</groupId>
++        <artifactId>sustopia-parent</artifactId>
+         <version>dev-SNAPSHOT</version>
+         <relativePath>../pom.xml</relativePath>
+     </parent>
+ 
+-    <artifactId>tuinity-api</artifactId>
++    <artifactId>sustopia-api</artifactId>
+     <version>1.16.5-R0.1-SNAPSHOT</version>
+     <packaging>jar</packaging>
+ 
+-    <name>Tuinity-API</name>
+-    <url>https://github.com/Spottedleaf/Tuinity</url>
++    <name>Sustopia-API</name>
++    <url>https://github.com/KurumiFake/Sustopia</url>
+     <description>An enhanced plugin API for Minecraft servers.</description>
+ 
+     <properties>
+@@ -68,7 +68,7 @@
+         <dependency>
+             <groupId>it.unimi.dsi</groupId>
+             <artifactId>fastutil</artifactId>
+-            <version>8.2.2</version>
++            <version>8.5.6</version>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+@@ -95,14 +95,14 @@
+         <dependency>
+             <groupId>com.google.guava</groupId>
+             <artifactId>guava</artifactId>
+-            <version>21.0</version>
++            <version>31.0.1-jre</version>
+             <scope>compile</scope>
+         </dependency>
+         <!-- bundled with Minecraft, should be kept in sync -->
+         <dependency>
+             <groupId>com.google.code.gson</groupId>
+             <artifactId>gson</artifactId>
+-            <version>2.8.0</version>
++            <version>2.8.9</version>
+             <scope>compile</scope>
+         </dependency>
+         <dependency>
+@@ -148,14 +148,14 @@
+         <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-api</artifactId>
+-            <version>1.7.25</version>
++            <version>1.7.35</version>
+             <scope>compile</scope>
+         </dependency>
+         <!-- testing -->
+         <dependency>
+             <groupId>junit</groupId>
+             <artifactId>junit</artifactId>
+-            <version>4.13.1</version>
++            <version>4.13.2</version>
+             <scope>test</scope>
+         </dependency>
+         <dependency>
+@@ -167,19 +167,19 @@
+         <dependency>
+             <groupId>org.ow2.asm</groupId>
+             <artifactId>asm-tree</artifactId>
+-            <version>9.1</version>
++            <version>9.2</version>
+             <scope>test</scope>
+         </dependency>
+         <!-- ASM -->
+         <dependency>
+             <groupId>org.ow2.asm</groupId>
+             <artifactId>asm</artifactId>
+-            <version>9.0</version>
++            <version>9.2</version>
+         </dependency>
+         <dependency>
+             <groupId>org.ow2.asm</groupId>
+             <artifactId>asm-commons</artifactId>
+-            <version>9.0</version>
++            <version>9.2</version>
+         </dependency>
+     </dependencies>
+ 
