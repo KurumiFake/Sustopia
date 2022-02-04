@@ -4,10 +4,10 @@ Date: Fri, 4 Feb 2022 13:13:16 +0700
 Subject: [PATCH] POM Changes
 
 - rebrand
-- update dependencies
+- update dependencies (an eccessive amount of them)
 
 diff --git a/pom.xml b/pom.xml
-index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..01771299be44b8505a7399561ffafabdfa44565d 100644
+index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..d3388be78a133ff09730b6d62c2f529058d5119e 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -60,6 +60,29 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..01771299be44b8505a7399561ffafabd
              <scope>compile</scope>
          </dependency>
          <dependency>
+@@ -122,19 +122,19 @@
+         <dependency>
+             <groupId>org.apache.maven</groupId>
+             <artifactId>maven-resolver-provider</artifactId>
+-            <version>3.8.1</version>
++            <version>3.8.4</version>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+             <groupId>org.apache.maven.resolver</groupId>
+             <artifactId>maven-resolver-connector-basic</artifactId>
+-            <version>1.6.2</version>
++            <version>1.7.3</version>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+             <groupId>org.apache.maven.resolver</groupId>
+             <artifactId>maven-resolver-transport-http</artifactId>
+-            <version>1.6.2</version>
++            <version>1.7.3</version>
+             <scope>provided</scope>
+         </dependency>
+         <!-- annotations -->
 @@ -148,14 +148,14 @@
          <dependency>
              <groupId>org.slf4j</groupId>
@@ -100,3 +123,76 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..01771299be44b8505a7399561ffafabd
          </dependency>
      </dependencies>
  
+@@ -202,24 +202,24 @@
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-compiler-plugin</artifactId>
+-                <version>3.8.1</version>
++                <version>3.9.0</version>
+                 <dependencies>
+                     <dependency>
+                         <groupId>org.codehaus.plexus</groupId>
+                         <artifactId>plexus-compiler-eclipse</artifactId>
+-                        <version>2.8.8</version>
++                        <version>2.9.0</version>
+                     </dependency>
+                     <dependency>
+                         <groupId>org.eclipse.jdt</groupId>
+                         <artifactId>ecj</artifactId>
+-                        <version>3.24.0</version>
++                        <version>3.28.0</version>
+                     </dependency>
+                 </dependencies>
+             </plugin>
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-jar-plugin</artifactId>
+-                <version>3.2.0</version>
++                <version>3.2.2</version>
+                 <configuration>
+                     <archive>
+                         <manifest>
+@@ -234,7 +234,7 @@
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-shade-plugin</artifactId>
+-                <version>3.2.3</version>
++                <version>3.2.4</version>
+                 <executions>
+                     <execution>
+                         <phase>package</phase>
+@@ -273,7 +273,7 @@
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-javadoc-plugin</artifactId>
+-                <version>3.2.0</version>
++                <version>3.3.1</version>
+                 <configuration>
+                     <links>
+                         <link>https://guava.dev/releases/21.0/api/docs/</link>
+@@ -303,7 +303,7 @@
+                     <plugin>
+                         <groupId>org.apache.maven.plugins</groupId>
+                         <artifactId>maven-checkstyle-plugin</artifactId>
+-                        <version>3.1.1</version>
++                        <version>3.1.2</version>
+                         <executions>
+                             <execution>
+                                 <phase>process-classes</phase>
+@@ -320,14 +320,14 @@
+                             <dependency>
+                                 <groupId>com.puppycrawl.tools</groupId>
+                                 <artifactId>checkstyle</artifactId>
+-                                <version>8.39</version>
++                                <version>8.45.1</version>
+                             </dependency>
+                         </dependencies>
+                     </plugin>
+                     <plugin>
+                         <groupId>org.codehaus.mojo</groupId>
+                         <artifactId>animal-sniffer-maven-plugin</artifactId>
+-                        <version>1.19</version>
++                        <version>1.20</version>
+                         <executions>
+                             <execution>
+                                 <phase>process-classes</phase>

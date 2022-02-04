@@ -3,9 +3,10 @@ From: KurumiFake <kurumiisshidowife@gmail.com>
 Date: Fri, 4 Feb 2022 13:33:04 +0700
 Subject: [PATCH] Update dependencies
 
+an excessive amount of em, yes
 
 diff --git a/pom.xml b/pom.xml
-index b91260cd9fc47cefe6d5c91b42eae3a3c3ba842d..c7f6e2d249f9fd84b5a171e2f5b8e652e58a7a9e 100644
+index b91260cd9fc47cefe6d5c91b42eae3a3c3ba842d..b5e4b6ace61eceec986a855c3587fa29e2012c4a 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -61,7 +61,7 @@
@@ -138,7 +139,7 @@ index b91260cd9fc47cefe6d5c91b42eae3a3c3ba842d..c7f6e2d249f9fd84b5a171e2f5b8e652
                                  <filter>
                                      <artifact>io.papermc:minecraft-server</artifact>
                                      <excludes>
-@@ -395,28 +402,28 @@
+@@ -395,40 +402,40 @@
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                      <resource>META-INF/services/java.sql.Driver</resource>
                                  </transformer>
@@ -173,3 +174,43 @@ index b91260cd9fc47cefe6d5c91b42eae3a3c3ba842d..c7f6e2d249f9fd84b5a171e2f5b8e652
                      </dependency>
                      <dependency>
                          <groupId>org.eclipse.jdt</groupId>
+                         <artifactId>ecj</artifactId>
+-                        <version>3.24.0</version>
++                        <version>3.28.0</version>
+                     </dependency>
+                 </dependencies>
+             </plugin>
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-surefire-plugin</artifactId>
+-                <version>2.12.4</version>
++                <version>2.22.2</version>
+                 <configuration>
+                     <workingDirectory>${basedir}/target/test-server</workingDirectory>
+                     <excludes>
+@@ -457,7 +464,7 @@
+                     <plugin>
+                         <groupId>org.apache.maven.plugins</groupId>
+                         <artifactId>maven-checkstyle-plugin</artifactId>
+-                        <version>3.1.1</version>
++                        <version>3.1.2</version>
+                         <executions>
+                             <execution>
+                                 <phase>process-classes</phase>
+@@ -474,14 +481,14 @@
+                             <dependency>
+                                 <groupId>com.puppycrawl.tools</groupId>
+                                 <artifactId>checkstyle</artifactId>
+-                                <version>8.39</version>
++                                <version>8.45.1</version>
+                             </dependency>
+                         </dependencies>
+                     </plugin>
+                     <plugin>
+                         <groupId>org.codehaus.mojo</groupId>
+                         <artifactId>animal-sniffer-maven-plugin</artifactId>
+-                        <version>1.19</version>
++                        <version>1.20</version>
+                         <executions>
+                             <execution>
+                                 <phase>process-classes</phase>
