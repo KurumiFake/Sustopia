@@ -7,7 +7,7 @@ Subject: [PATCH] POM Changes
 - update dependencies (an eccessive amount of them)
 
 diff --git a/pom.xml b/pom.xml
-index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..d3388be78a133ff09730b6d62c2f529058d5119e 100644
+index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..1f9458c1ec8429e43a5c18a6b0d2c62ae74dcc10 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -34,6 +34,15 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..d3388be78a133ff09730b6d62c2f5290
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
+@@ -22,7 +22,7 @@
+         <maven.compiler.source>1.8</maven.compiler.source>
+         <maven.compiler.target>1.8</maven.compiler.target>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+-        <adventure.version>4.7.0</adventure.version> <!-- Paper - When updating this make sure to update the linked JavaDocs on the homepage as well! -->
++        <adventure.version>4.9.3</adventure.version> <!-- Paper - When updating this make sure to update the linked JavaDocs on the homepage as well! -->
+     </properties>
+ 
+     <repositories>
 @@ -68,7 +68,7 @@
          <dependency>
              <groupId>it.unimi.dsi</groupId>
@@ -60,7 +69,7 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..d3388be78a133ff09730b6d62c2f5290
              <scope>compile</scope>
          </dependency>
          <dependency>
-@@ -122,19 +122,19 @@
+@@ -122,40 +122,40 @@
          <dependency>
              <groupId>org.apache.maven</groupId>
              <artifactId>maven-resolver-provider</artifactId>
@@ -83,7 +92,15 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..d3388be78a133ff09730b6d62c2f5290
              <scope>provided</scope>
          </dependency>
          <!-- annotations -->
-@@ -148,14 +148,14 @@
+         <dependency>
+             <groupId>org.jetbrains</groupId>
+-            <artifactId>annotations-java5</artifactId>
+-            <version>20.1.0</version>
++            <artifactId>annotations</artifactId>
++            <version>23.0.0</version>
+             <scope>provided</scope>
+         </dependency>
+         <!-- Paper - Add SLF4J -->
          <dependency>
              <groupId>org.slf4j</groupId>
              <artifactId>slf4j-api</artifactId>
