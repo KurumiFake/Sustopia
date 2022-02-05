@@ -28,7 +28,7 @@
     </build>
     <modules>
         <module>Sustopia-API</module>
+        <module>Sustopia-MojangAPI</module>
         <module>Sustopia-Server</module>
-        <module>Airplane${file.separator}Tuinity${file.separator}Paper${file.separator}Paper-MojangAPI</module> <!-- We don't plan on patching this, so this hack is good enough. -->
     </modules>
 </project>

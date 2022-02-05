@@ -56,9 +56,18 @@ if [ "$(cat "$basedir"/current-airplane)" != "$tag" ]; then
     forcetag=1
 fi
 
+cd Tuinity/Paper/Paper-MojangAPI
+git init
+git add -A
+git commit -m "Paper" --author="Paper <auto@mated.null>"
+
+cd ../../..
+
 tag Airplane-API $forcetag
+tag Tuinity/Paper/Paper-MojangAPI $forcetag
 tag Airplane-Server $forcetag
 
 pushRepo Airplane-API $AIRPLANE_API_REPO $tag
+pushRepo Tuinity/Paper/Paper-MojangAPI $PAPER_MOJANGAPI_REPO $tag
 pushRepo Airplane-Server $AIRPLANE_SERVER_REPO $tag
 

@@ -12,4 +12,5 @@ minecraftversion=$(cat $basedir/Airplane/Tuinity/Paper/work/BuildData/info.json 
 
 basedir
 pushRepo ${FORK_NAME}-API $API_REPO master:$minecraftversion
+pushRepo ${FORK_NAME}-MojangAPI $MOJANGAPI_REPO master:$minecraftversion
 pushRepo ${FORK_NAME}-Server $SERVER_REPO master:$minecraftversion

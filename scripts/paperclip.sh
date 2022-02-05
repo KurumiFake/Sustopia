@@ -12,10 +12,10 @@ paperjar="$basedir/Sustopia-Server/target/sustopia-$mcver.jar"
 vanillajar="$workdir/Minecraft/$mcver/$mcver.jar"
 
 (
-    cd "$workdir/Paperclip"
+    cd "$basedir/Paperclip"
     mvn clean package "-Dmcver=$mcver" "-Dpaperjar=$paperjar" "-Dvanillajar=$vanillajar"
 )
-cp "$workdir/Paperclip/assembly/target/paperclip-${mcver}.jar" "$basedir/sustopia-paperclip.jar"
+cp "$basedir/Paperclip/assembly/target/paperclip-${mcver}.jar" "$basedir/sustopia-paperclip.jar"
 
 echo ""
 echo ""
