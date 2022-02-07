@@ -6,7 +6,7 @@ Subject: [PATCH] Update dependencies
 an excessive amount of em, yes
 
 diff --git a/pom.xml b/pom.xml
-index b91260cd9fc47cefe6d5c91b42eae3a3c3ba842d..6166b6b7bd52f368a62b20bccd21568f3bbb84c3 100644
+index 899184971b5176b58a09689d84dac152b9746af1..36004ff363b230cbd8e73cd5f3cd95304c76c18a 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -37,13 +37,6 @@

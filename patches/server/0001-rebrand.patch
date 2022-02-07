@@ -5,7 +5,7 @@ Subject: [PATCH] rebrand
 
 
 diff --git a/pom.xml b/pom.xml
-index a65866927ea9b6f36642a7df231a06e783a0cc9b..b91260cd9fc47cefe6d5c91b42eae3a3c3ba842d 100644
+index a65866927ea9b6f36642a7df231a06e783a0cc9b..899184971b5176b58a09689d84dac152b9746af1 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -34,7 +34,7 @@ index a65866927ea9b6f36642a7df231a06e783a0cc9b..b91260cd9fc47cefe6d5c91b42eae3a3
          <version>dev-SNAPSHOT</version>
          <relativePath>../pom.xml</relativePath>
      </parent>
-@@ -46,8 +46,8 @@
+@@ -46,14 +46,14 @@
  
      <dependencies>
          <dependency>
@@ -42,6 +42,14 @@ index a65866927ea9b6f36642a7df231a06e783a0cc9b..b91260cd9fc47cefe6d5c91b42eae3a3
 -            <artifactId>tuinity-api</artifactId>
 +            <groupId>me.kurumifake</groupId>
 +            <artifactId>sustopia-api</artifactId>
+             <version>${project.version}</version>
+             <scope>compile</scope>
+         </dependency>
+         <dependency>
+-            <groupId>com.destroystokyo.paper</groupId>
+-            <artifactId>paper-mojangapi</artifactId>
++            <groupId>me.kurumifake</groupId>
++            <artifactId>sustopia-mojangapi</artifactId>
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
