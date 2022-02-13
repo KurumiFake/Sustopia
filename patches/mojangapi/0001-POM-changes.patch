@@ -5,7 +5,7 @@ Subject: [PATCH] POM changes
 
 
 diff --git a/pom.xml b/pom.xml
-index 7712a8723cddb59829a5181f54098d0bb4083f6e..3eb1911afd891f979f6d48b1e0ada40b673a9ecf 100644
+index 7712a8723cddb59829a5181f54098d0bb4083f6e..e7441882217e8a0fd962f41a321ed2015bb2d2b2 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -64,15 +64,7 @@ index 7712a8723cddb59829a5181f54098d0bb4083f6e..3eb1911afd891f979f6d48b1e0ada40b
              <version>${project.version}</version>
              <scope>provided</scope>
          </dependency>
-@@ -58,28 +47,28 @@
-         <dependency>
-             <groupId>com.mojang</groupId>
-             <artifactId>brigadier</artifactId>
--            <version>1.0.17</version>
-+            <version>1.0.18</version>
-             <scope>compile</scope>
-         </dependency>
-         <!-- utils -->
+@@ -65,21 +54,21 @@
          <dependency>
              <groupId>it.unimi.dsi</groupId>
              <artifactId>fastutil</artifactId>
@@ -85,7 +77,7 @@ index 7712a8723cddb59829a5181f54098d0bb4083f6e..3eb1911afd891f979f6d48b1e0ada40b
              <groupId>org.jetbrains</groupId>
              <artifactId>annotations</artifactId>
 -            <version>18.0.0</version>
-+            <version>23.0.0</version>
++            <version>20.1.0</version>
              <scope>provided</scope>
          </dependency>
          <!-- testing -->

@@ -7,7 +7,7 @@ Subject: [PATCH] POM Changes
 - update dependencies (an eccessive amount of them)
 
 diff --git a/pom.xml b/pom.xml
-index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..1f9458c1ec8429e43a5c18a6b0d2c62ae74dcc10 100644
+index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..0b8fae2d2eee9b3d3a044eee0a0b276239cf2a38 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -34,15 +34,6 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..1f9458c1ec8429e43a5c18a6b0d2c62a
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
-@@ -22,7 +22,7 @@
-         <maven.compiler.source>1.8</maven.compiler.source>
-         <maven.compiler.target>1.8</maven.compiler.target>
-         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
--        <adventure.version>4.7.0</adventure.version> <!-- Paper - When updating this make sure to update the linked JavaDocs on the homepage as well! -->
-+        <adventure.version>4.9.3</adventure.version> <!-- Paper - When updating this make sure to update the linked JavaDocs on the homepage as well! -->
-     </properties>
- 
-     <repositories>
 @@ -68,7 +68,7 @@
          <dependency>
              <groupId>it.unimi.dsi</groupId>
@@ -57,7 +48,7 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..1f9458c1ec8429e43a5c18a6b0d2c62a
              <groupId>com.google.guava</groupId>
              <artifactId>guava</artifactId>
 -            <version>21.0</version>
-+            <version>31.0.1-jre</version>
++            <version>27.1-jre</version>
              <scope>compile</scope>
          </dependency>
          <!-- bundled with Minecraft, should be kept in sync -->
@@ -69,7 +60,7 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..1f9458c1ec8429e43a5c18a6b0d2c62a
              <scope>compile</scope>
          </dependency>
          <dependency>
-@@ -122,40 +122,40 @@
+@@ -122,19 +122,19 @@
          <dependency>
              <groupId>org.apache.maven</groupId>
              <artifactId>maven-resolver-provider</artifactId>
@@ -92,15 +83,7 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..1f9458c1ec8429e43a5c18a6b0d2c62a
              <scope>provided</scope>
          </dependency>
          <!-- annotations -->
-         <dependency>
-             <groupId>org.jetbrains</groupId>
--            <artifactId>annotations-java5</artifactId>
--            <version>20.1.0</version>
-+            <artifactId>annotations</artifactId>
-+            <version>23.0.0</version>
-             <scope>provided</scope>
-         </dependency>
-         <!-- Paper - Add SLF4J -->
+@@ -148,14 +148,14 @@
          <dependency>
              <groupId>org.slf4j</groupId>
              <artifactId>slf4j-api</artifactId>

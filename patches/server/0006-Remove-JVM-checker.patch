@@ -60,7 +60,7 @@ index fdf3ff8894e5e202229d1be52fe3c92ea039ef15..00000000000000000000000000000000
 -    }
 -}
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index e25656bdccce8f42d4c1a0dc84703a5ecaafa068..9c5741f93bdc1df7110116993e1dfa3a08d45e1e 100644
+index c7146434eeb072549d899a32e42bcf3367893b53..fec00435896395cc1ae05b73a1e06f2e5c1ece29 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -181,7 +181,6 @@ import org.bukkit.event.server.ServerLoadEvent;
@@ -70,7 +70,7 @@ index e25656bdccce8f42d4c1a0dc84703a5ecaafa068..9c5741f93bdc1df7110116993e1dfa3a
 -import io.papermc.paper.util.PaperJvmChecker; // Paper
  import io.papermc.paper.event.server.ServerResourcesReloadedEvent; // Paper
  
- public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTask> implements /*IMojangStatistics, // Patina - Disable Snooper. Not to send anonymous server information to Mojang */ ICommandListener, AutoCloseable {
+ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTask> implements /*IMojangStatistics,*/ ICommandListener, AutoCloseable {
 @@ -1091,7 +1090,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                  LOGGER.info("Done ({})! For help, type \"help\"", doneTime);
                  // Paper end
