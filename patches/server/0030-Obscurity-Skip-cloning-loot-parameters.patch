@@ -7,7 +7,7 @@ Original code by RedeObscurity, licensed under MIT
 You can find the original code on https://github.com/RedeObscurity/Obscurity
 
 diff --git a/src/main/java/net/minecraft/advancements/Advancement.java b/src/main/java/net/minecraft/advancements/Advancement.java
-index 2f3d9e5b849093027d3c2ef434494cd600f52a31..2c371b0c8bceafd9d8b9981412916ec9d7f35e98 100644
+index 2f3d9e5b849093027d3c2ef434494cd600f52a31..ee07b1f6fb32697c9b08a770156b72f5560d6c9d 100644
 --- a/src/main/java/net/minecraft/advancements/Advancement.java
 +++ b/src/main/java/net/minecraft/advancements/Advancement.java
 @@ -44,7 +44,7 @@ public class Advancement {
@@ -15,7 +15,7 @@ index 2f3d9e5b849093027d3c2ef434494cd600f52a31..2c371b0c8bceafd9d8b9981412916ec9
          this.key = minecraftkey;
          this.display = advancementdisplay;
 -        this.criteria = ImmutableMap.copyOf(map);
-+        this.criteria = java.util.Collections.unmodifiableMap(criteria); // Obscurity - Skip cloning loot parameters
++        this.criteria = java.util.Collections.unmodifiableMap(map); // Obscurity - Skip cloning loot parameters
          this.parent = advancement;
          this.rewards = advancementrewards;
          this.requirements = astring;
