@@ -12,7 +12,7 @@ You can find the original code on https://github.com/YatopiaMC/Yatopia
 // Sustopia - hardcode interval to 20, mimic Mirai
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/EntityHuman.java b/src/main/java/net/minecraft/world/entity/player/EntityHuman.java
-index 5f9e64df007ebc40f7bcb50be495b10e51d5b87a..8ce9c905e4987ba5ffc2407cde22bb80edfe5d8a 100644
+index 5f9e64df007ebc40f7bcb50be495b10e51d5b87a..965ea0da287009c82c434796ee6d491d07f48208 100644
 --- a/src/main/java/net/minecraft/world/entity/player/EntityHuman.java
 +++ b/src/main/java/net/minecraft/world/entity/player/EntityHuman.java
 @@ -265,18 +265,22 @@ public abstract class EntityHuman extends EntityLiving {
@@ -21,7 +21,7 @@ index 5f9e64df007ebc40f7bcb50be495b10e51d5b87a..8ce9c905e4987ba5ffc2407cde22bb80
              this.foodData.a(this);
 -            this.a(StatisticList.PLAY_ONE_MINUTE);
 +            // Yatopia start
-+            if (ticksLived % interval == 0) {
++            if (ticksLived % 20 == 0) {
 +            this.a(StatisticList.PLAY_ONE_MINUTE, 20);
 +            // Yatopia end
              if (this.isAlive()) {
