@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: KurumiFake <kurumiisshidowife@gmail.com>
+Date: Sun, 13 Feb 2022 10:35:56 +0000
+Subject: [PATCH] add dependencies
+
+
+diff --git a/pom.xml b/pom.xml
+index af9148c0a4b06af536d9996d9ca29c2345b57ed4..017e2f37b213f57e0c7cff34fd43e04c2aeb85b1 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -200,6 +200,12 @@
+             <version>fe3dbb4420</version>
+             <scope>compile</scope>
+         </dependency>
++        <!-- Fast Math -->
++        <dependency>
++            <groupId>org.apache.commons</groupId>
++            <artifactId>commons-math3</artifactId>
++            <version>3.6.1</version>
++        </dependency>
+     </dependencies>
+ 
+     <!-- This builds a completely 'ready to start' jar with all dependencies inside -->

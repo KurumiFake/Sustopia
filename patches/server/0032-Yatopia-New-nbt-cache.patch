@@ -10,7 +10,6 @@ Co-authored-by: ishland <ishlandmc@yeah.net>
 Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
-
 diff --git a/src/main/java/me/kurumifake/sustopia/cache/NBTCache.java b/src/main/java/me/kurumifake/sustopia/cache/NBTCache.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..375e7b2965768ccdd3a65126dc2a9fad9233a3ca
