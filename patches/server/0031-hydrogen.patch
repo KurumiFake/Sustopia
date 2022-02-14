@@ -271,7 +271,7 @@ index 0000000000000000000000000000000000000000..7772a4218fbc76a3f055881aa5301624
 +}
 diff --git a/src/main/java/me/jellysquid/mods/hydrogen/common/cache/StatePropertyTableCache.java b/src/main/java/me/jellysquid/mods/hydrogen/common/cache/StatePropertyTableCache.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..68c69bd90f5ecf3b72d631faac21f89b88fe37cb
+index 0000000000000000000000000000000000000000..09531b712b17c51b7e788c5a7863eda3b3f5ac52
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/hydrogen/common/cache/StatePropertyTableCache.java
 @@ -0,0 +1,38 @@
@@ -279,7 +279,7 @@ index 0000000000000000000000000000000000000000..68c69bd90f5ecf3b72d631faac21f89b
 +
 +import me.jellysquid.mods.hydrogen.common.collections.FastImmutableTableCache;
 +import net.minecraft.world.level.block.Block;
-+import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.block.state.IBlockData;
 +import net.minecraft.world.level.block.state.properties.Property;
 +import net.minecraft.world.level.material.Fluid;
 +import net.minecraft.world.level.material.FluidState;
@@ -296,7 +296,7 @@ index 0000000000000000000000000000000000000000..68c69bd90f5ecf3b72d631faac21f89b
 + * dropped along with the rest of the loaded classes when the class loader is reaped.
 + */
 +public class StatePropertyTableCache {
-+    public static final FastImmutableTableCache<Property<?>, Comparable<?>, BlockState> BLOCK_STATE_TABLE =
++    public static final FastImmutableTableCache<Property<?>, Comparable<?>, IBlockData> BLOCK_STATE_TABLE =
 +            new FastImmutableTableCache<>();
 +
 +    public static final FastImmutableTableCache<Property<?>, Comparable<?>, FluidState> FLUID_STATE_TABLE =
@@ -953,23 +953,23 @@ index 0000000000000000000000000000000000000000..db7d91dfb8b852e1c204c44f62847f48
 +}
 diff --git a/src/main/java/me/jellysquid/mods/hydrogen/common/state/all/AllMatchOneBoolean.java b/src/main/java/me/jellysquid/mods/hydrogen/common/state/all/AllMatchOneBoolean.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..55844de0ca4247c165a49b307f66d0d141134b2a
+index 0000000000000000000000000000000000000000..00cedaa4539cb2396e9a989fc18bc70da0488f73
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/hydrogen/common/state/all/AllMatchOneBoolean.java
 @@ -0,0 +1,46 @@
 +package me.jellysquid.mods.hydrogen.common.state.all;
 +
 +import me.jellysquid.mods.hydrogen.common.state.single.SingleMatchOne;
-+import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.block.state.IBlockData;
 +import net.minecraft.world.level.block.state.properties.Property;
 +import java.util.List;
 +import java.util.function.Predicate;
 +
-+public class AllMatchOneBoolean implements Predicate<BlockState> {
++public class AllMatchOneBoolean implements Predicate<IBlockData> {
 +    private final Property<?>[] properties;
 +    private final boolean[] values;
 +
-+    public AllMatchOneBoolean(List<Predicate<BlockState>> list) {
++    public AllMatchOneBoolean(List<Predicate<IBlockData>> list) {
 +        int size = list.size();
 +
 +        this.properties = new Property[size];
@@ -983,7 +983,7 @@ index 0000000000000000000000000000000000000000..55844de0ca4247c165a49b307f66d0d1
 +        }
 +    }
 +
-+    public static boolean canReplace(List<Predicate<BlockState>> list) {
++    public static boolean canReplace(List<Predicate<IBlockData>> list) {
 +        return list.stream()
 +                .allMatch(p -> {
 +                    return p instanceof SingleMatchOne && ((SingleMatchOne) p).value instanceof Boolean;
@@ -991,9 +991,9 @@ index 0000000000000000000000000000000000000000..55844de0ca4247c165a49b307f66d0d1
 +    }
 +
 +    @Override
-+    public boolean test(BlockState blockState) {
++    public boolean test(IBlockData iblockdata) {
 +        for (int i = 0; i < this.properties.length; i++) {
-+            Boolean value = (Boolean) blockState.getValue(this.properties[i]);
++            Boolean value = (Boolean) iblockdata.getValue(this.properties[i]);
 +
 +            if (value != this.values[i]) {
 +                return false;
@@ -1005,23 +1005,23 @@ index 0000000000000000000000000000000000000000..55844de0ca4247c165a49b307f66d0d1
 +}
 diff --git a/src/main/java/me/jellysquid/mods/hydrogen/common/state/all/AllMatchOneObject.java b/src/main/java/me/jellysquid/mods/hydrogen/common/state/all/AllMatchOneObject.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..49be1c9d9da46dee2a14a5423d25a09ccfb19e3a
+index 0000000000000000000000000000000000000000..29a21098bd96256bbd3daa9e6c1161e11d8ad47b
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/hydrogen/common/state/all/AllMatchOneObject.java
 @@ -0,0 +1,37 @@
 +package me.jellysquid.mods.hydrogen.common.state.all;
 +
 +import me.jellysquid.mods.hydrogen.common.state.single.SingleMatchOne;
-+import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.block.state.IBlockData;
 +import net.minecraft.world.level.block.state.properties.Property;
 +import java.util.List;
 +import java.util.function.Predicate;
 +
-+public class AllMatchOneObject implements Predicate<BlockState> {
++public class AllMatchOneObject implements Predicate<IBlockData> {
 +    private final Property<?>[] properties;
 +    private final Object[] values;
 +
-+    public AllMatchOneObject(List<Predicate<BlockState>> list) {
++    public AllMatchOneObject(List<Predicate<IBlockData>> list) {
 +        int size = list.size();
 +
 +        this.properties = new Property[size];
@@ -1036,9 +1036,9 @@ index 0000000000000000000000000000000000000000..49be1c9d9da46dee2a14a5423d25a09c
 +    }
 +
 +    @Override
-+    public boolean test(BlockState blockState) {
++    public boolean test(IBlockData iblockdata) {
 +        for (int i = 0; i < this.properties.length; i++) {
-+            if (blockState.getValue(this.properties[i]) != this.values[i]) {
++            if (iblockdata.getValue(this.properties[i]) != this.values[i]) {
 +                return false;
 +            }
 +        }
@@ -1048,25 +1048,25 @@ index 0000000000000000000000000000000000000000..49be1c9d9da46dee2a14a5423d25a09c
 +}
 diff --git a/src/main/java/me/jellysquid/mods/hydrogen/common/state/any/AllMatchAnyObject.java b/src/main/java/me/jellysquid/mods/hydrogen/common/state/any/AllMatchAnyObject.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..b46cdb3fd8131d3ce570ed9fadae2c790645eba6
+index 0000000000000000000000000000000000000000..d23b15a0577693955688495eadebd1247ee840bf
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/hydrogen/common/state/any/AllMatchAnyObject.java
 @@ -0,0 +1,39 @@
 +package me.jellysquid.mods.hydrogen.common.state.any;
 +
 +import me.jellysquid.mods.hydrogen.common.state.single.SingleMatchAny;
-+import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.block.state.IBlockData;
 +import net.minecraft.world.level.block.state.properties.Property;
 +import org.apache.commons.lang3.ArrayUtils;
 +
 +import java.util.List;
 +import java.util.function.Predicate;
 +
-+public class AllMatchAnyObject implements Predicate<BlockState> {
++public class AllMatchAnyObject implements Predicate<IBlockData> {
 +    private final Property<?>[] properties;
 +    private final Object[][] values;
 +
-+    public AllMatchAnyObject(List<Predicate<BlockState>> list) {
++    public AllMatchAnyObject(List<Predicate<IBlockData>> list) {
 +        int size = list.size();
 +
 +        this.properties = new Property[size];
@@ -1081,9 +1081,9 @@ index 0000000000000000000000000000000000000000..b46cdb3fd8131d3ce570ed9fadae2c79
 +    }
 +
 +    @Override
-+    public boolean test(BlockState blockState) {
++    public boolean test(IBlockData iblockdata) {
 +        for (int i = 0; i < this.properties.length; i++) {
-+            if (!ArrayUtils.contains(this.values[i], blockState.getValue(this.properties[i]))) {
++            if (!ArrayUtils.contains(this.values[i], iblockdata.getValue(this.properties[i]))) {
 +                return false;
 +            }
 +        }
@@ -1093,7 +1093,7 @@ index 0000000000000000000000000000000000000000..b46cdb3fd8131d3ce570ed9fadae2c79
 +}
 diff --git a/src/main/java/me/jellysquid/mods/hydrogen/common/state/single/SingleMatchAny.java b/src/main/java/me/jellysquid/mods/hydrogen/common/state/single/SingleMatchAny.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..5ba47d431bb53cb1ccb32cff4663d26466b53a33
+index 0000000000000000000000000000000000000000..4ffefe714f0ccb63d7d6ddd3f1e9c492aed1d5ba
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/hydrogen/common/state/single/SingleMatchAny.java
 @@ -0,0 +1,63 @@
@@ -1106,10 +1106,10 @@ index 0000000000000000000000000000000000000000..5ba47d431bb53cb1ccb32cff4663d264
 +import java.util.List;
 +import java.util.Objects;
 +import java.util.function.Predicate;
-+import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.block.state.IBlockData;
 +import net.minecraft.world.level.block.state.properties.Property;
 +
-+public class SingleMatchAny implements Predicate<BlockState> {
++public class SingleMatchAny implements Predicate<IBlockData> {
 +    public static final ObjectOpenHashSet<SingleMatchAny> PREDICATES = new ObjectOpenHashSet<>();
 +
 +    public final Property<?> property;
@@ -1124,14 +1124,14 @@ index 0000000000000000000000000000000000000000..5ba47d431bb53cb1ccb32cff4663d264
 +        return PREDICATES.addOrGet(new SingleMatchAny(property, values));
 +    }
 +
-+    public static boolean areOfType(List<Predicate<BlockState>> predicates) {
++    public static boolean areOfType(List<Predicate<IBlockData>> predicates) {
 +        return predicates.stream()
 +                .allMatch(p -> {
 +                    return p instanceof SingleMatchAny;
 +                });
 +    }
 +
-+    public static boolean valuesMatchType(List<Predicate<BlockState>> predicates, Class<?> type) {
++    public static boolean valuesMatchType(List<Predicate<IBlockData>> predicates, Class<?> type) {
 +        return predicates.stream()
 +                .allMatch(p -> {
 +                    return p instanceof SingleMatchAny &&
@@ -1140,8 +1140,8 @@ index 0000000000000000000000000000000000000000..5ba47d431bb53cb1ccb32cff4663d264
 +    }
 +
 +    @Override
-+    public boolean test(BlockState blockState) {
-+        return ArrayUtils.contains(this.values, blockState.getValue(this.property));
++    public boolean test(IBlockData iblockdata) {
++        return ArrayUtils.contains(this.values, iblockdata.getValue(this.property));
 +    }
 +
 +    @Override
@@ -1162,7 +1162,7 @@ index 0000000000000000000000000000000000000000..5ba47d431bb53cb1ccb32cff4663d264
 +}
 diff --git a/src/main/java/me/jellysquid/mods/hydrogen/common/state/single/SingleMatchOne.java b/src/main/java/me/jellysquid/mods/hydrogen/common/state/single/SingleMatchOne.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..18649ef152ea6f7ae08bfa217fd1a1ad6581245e
+index 0000000000000000000000000000000000000000..19256ac3adce2fba290bbca5ab860d066930d516
 --- /dev/null
 +++ b/src/main/java/me/jellysquid/mods/hydrogen/common/state/single/SingleMatchOne.java
 @@ -0,0 +1,35 @@
@@ -1170,10 +1170,10 @@ index 0000000000000000000000000000000000000000..18649ef152ea6f7ae08bfa217fd1a1ad
 +
 +import java.util.List;
 +import java.util.function.Predicate;
-+import net.minecraft.world.level.block.state.BlockState;
++import net.minecraft.world.level.block.state.IBlockData;
 +import net.minecraft.world.level.block.state.properties.Property;
 +
-+public class SingleMatchOne implements Predicate<BlockState> {
++public class SingleMatchOne implements Predicate<IBlockData> {
 +    public final Property<?> property;
 +    public final Object value;
 +
@@ -1182,14 +1182,14 @@ index 0000000000000000000000000000000000000000..18649ef152ea6f7ae08bfa217fd1a1ad
 +        this.value = value;
 +    }
 +
-+    public static boolean areOfType(List<Predicate<BlockState>> predicates) {
++    public static boolean areOfType(List<Predicate<IBlockData>> predicates) {
 +        return predicates.stream()
 +                .allMatch(p -> {
 +                    return p instanceof SingleMatchOne;
 +                });
 +    }
 +
-+    public static boolean valuesMatchType(List<Predicate<BlockState>> predicates, Class<?> type) {
++    public static boolean valuesMatchType(List<Predicate<IBlockData>> predicates, Class<?> type) {
 +        return predicates.stream()
 +                .allMatch(p -> {
 +                    return p instanceof SingleMatchOne && type.isInstance(((SingleMatchOne) p).value);
@@ -1197,8 +1197,8 @@ index 0000000000000000000000000000000000000000..18649ef152ea6f7ae08bfa217fd1a1ad
 +    }
 +
 +    @Override
-+    public boolean test(BlockState blockState) {
-+        return blockState.getValue(this.property) == this.value;
++    public boolean test(IBlockData iblockdata) {
++        return iblockdata.getValue(this.property) == this.value;
 +    }
 +}
 diff --git a/src/main/java/me/jellysquid/mods/hydrogen/common/util/AllPredicate.java b/src/main/java/me/jellysquid/mods/hydrogen/common/util/AllPredicate.java
