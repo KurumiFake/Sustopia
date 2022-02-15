@@ -1,0 +1,251 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Mon, 3 May 2021 16:49:41 -0400
+Subject: [PATCH] (Hyalus) Better handling of async tasks
+
+Replaces niche/one time use threadpools in other areas by instead using `asyncExecutor` in `MCUtil` $
+
+Original code by Titaniumtown, licensed under GPLv3
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
+
+diff --git a/src/main/java/net/minecraft/commands/CommandDispatcher.java b/src/main/java/net/minecraft/commands/CommandDispatcher.java
+index 3d255c2ed31d7267bb6cd789702063671d785018..6c8f4f099d7ec56c2ee11ac5e2a226f731cc9675 100644
+--- a/src/main/java/net/minecraft/commands/CommandDispatcher.java
++++ b/src/main/java/net/minecraft/commands/CommandDispatcher.java
+@@ -344,8 +344,11 @@ public class CommandDispatcher {
+         // CraftBukkit start
+         // Register Vanilla commands into builtRoot as before
+         // Paper start - Async command map building
+-        java.util.concurrent.ForkJoinPool.commonPool().execute(() -> {
+-            sendAsync(entityplayer);
++        // java.util.concurrent.ForkJoinPool.commonPool().execute(() -> {
++        net.minecraft.server.MCUtil.smallAsyncTasks.add(new Runnable() {
++            public void run() {
++                sendAsync(entityplayer);
++            }
+         });
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
+index b7399d17dd64ca8b1f1fab405cb0ac914dc53b98..2ad9e8d14d550bb0a3d23bc6dfd1105ba818be5d 100644
+--- a/src/main/java/net/minecraft/server/MCUtil.java
++++ b/src/main/java/net/minecraft/server/MCUtil.java
+@@ -53,12 +53,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
+ import java.util.function.BiConsumer;
+ import java.util.function.Consumer;
+ import java.util.function.Supplier;
++import java.util.concurrent.SynchronousQueue;
++import java.util.concurrent.ConcurrentLinkedQueue;
+ 
+ public final class MCUtil {
++    public static final ConcurrentLinkedQueue smallAsyncTasks = new ConcurrentLinkedQueue();
+     public static final double COLLISION_EPSILON = 1.0E-7; // Tuinity - Just in case mojang changes this...
+     public static final ThreadPoolExecutor asyncExecutor = new ThreadPoolExecutor(
+-        0, 2, 60L, TimeUnit.SECONDS,
+-        new LinkedBlockingQueue<Runnable>(),
++        4, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS,
++        new SynchronousQueue<Runnable>(),
+         new ThreadFactoryBuilder().setNameFormat("Paper Async Task Handler Thread - %1$d").build()
+     );
+     public static final ThreadPoolExecutor cleanerExecutor = new ThreadPoolExecutor(
+@@ -69,6 +72,29 @@ public final class MCUtil {
+ 
+     public static final long INVALID_CHUNK_KEY = getCoordinateKey(Integer.MAX_VALUE, Integer.MAX_VALUE);
+ 
++    public static void flushAsyncTasks() {
++        if (!smallAsyncTasks.isEmpty()) {
++            asyncExecutor.submit(() -> {
++            Runnable runnable;
++            while((runnable = (Runnable)smallAsyncTasks.poll()) != null) {
++                    runnable.run();
++                }
++            });
++        }
++    }
++
++    public static void flushAsyncTasksMidTick() {
++        if (smallAsyncTasks.size() <= 16) {
++            asyncExecutor.submit(() -> {
++                Runnable runnable;
++                while((runnable = (Runnable)smallAsyncTasks.poll()) != null) {
++                    runnable.run();
++                }
++
++            });
++        }
++    }
++
+ 
+     public static Runnable once(Runnable run) {
+         AtomicBoolean ran = new AtomicBoolean(false);
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index fec00435896395cc1ae05b73a1e06f2e5c1ece29..1d2418c11bf935cf7dca33940abbe4ceb7d15b51 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -969,6 +969,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+         LOGGER.info("Flushing Chunk IO");
+         com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.close(true, true); // Paper
+         LOGGER.info("Closing Thread Pool");
++        MCUtil.flushAsyncTasks();
+         SystemUtils.shutdownServerThreadPool(); // Paper
+         LOGGER.info("Closing Server");
+         try {
+@@ -1254,6 +1255,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+             return;
+         }
+ 
++        MCUtil.flushAsyncTasksMidTick();
+         co.aikar.timings.MinecraftTimings.midTickChunkTasks.startTiming();
+         try {
+             for (;;) {
+@@ -1455,6 +1457,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+ 
+         // Paper start - move executeAll() into full server tick timing
+         try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
++            MCUtil.flushAsyncTasks();
+             this.executeAll();
+         }
+         // Paper end
+diff --git a/src/main/java/net/minecraft/server/network/LoginListener.java b/src/main/java/net/minecraft/server/network/LoginListener.java
+index 25437a993c02379fa43e5d46159cd9ba2aebf10f..0aab4cffe3f83c7c22d118b91389418101d7fa46 100644
+--- a/src/main/java/net/minecraft/server/network/LoginListener.java
++++ b/src/main/java/net/minecraft/server/network/LoginListener.java
+@@ -48,6 +48,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+ import org.bukkit.event.player.PlayerPreLoginEvent;
+ // CraftBukkit end
+ import io.netty.buffer.Unpooled; // Paper
++import net.minecraft.server.MCUtil;
+ 
+ public class LoginListener implements PacketLoginInListener {
+ 
+@@ -127,10 +128,12 @@ public class LoginListener implements PacketLoginInListener {
+     }
+ 
+     // Paper start - Cache authenticator threads
++    /*
+     private static final AtomicInteger threadId = new AtomicInteger(0);
+     private static final java.util.concurrent.ExecutorService authenticatorPool = java.util.concurrent.Executors.newCachedThreadPool(
+             r -> new Thread(r, "User Authenticator #" + threadId.incrementAndGet())
+     );
++    */
+     // Paper end
+     // Spigot start
+     public void initUUID()
+@@ -220,7 +223,7 @@ public class LoginListener implements PacketLoginInListener {
+             // Paper end
+             // Spigot start
+             // Paper start - Cache authenticator threads
+-            authenticatorPool.execute(new Runnable() {
++            MCUtil.asyncExecutor.execute(new Runnable() {
+                 @Override
+                 public void run() {
+                     try {
+@@ -262,7 +265,7 @@ public class LoginListener implements PacketLoginInListener {
+         }
+ 
+         // Paper start - Cache authenticator threads
+-        authenticatorPool.execute(new Runnable() {
++        MCUtil.asyncExecutor.execute(new Runnable() {
+             public void run() {
+                 GameProfile gameprofile = LoginListener.this.i;
+ 
+@@ -396,7 +399,7 @@ public class LoginListener implements PacketLoginInListener {
+             this.setGameProfile(com.destroystokyo.paper.proxy.VelocityProxy.createProfile(buf));
+ 
+             // Proceed with login
+-            authenticatorPool.execute(() -> {
++            MCUtil.asyncExecutor.execute(() -> {
+                 try {
+                     new LoginHandler().fireEvents();
+                 } catch (Exception ex) {
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/TileEntitySkull.java b/src/main/java/net/minecraft/world/level/block/entity/TileEntitySkull.java
+index 4f7c014fa609a39cac651ccc6d3397d7edb77d8d..f75a925af0df2b53e9219e8d03e335e11d6a94a4 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/TileEntitySkull.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/TileEntitySkull.java
+@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.world.entity.player.EntityHuman;
+ // Spigot end
++import net.minecraft.server.MCUtil;
+ 
+ public class TileEntitySkull extends TileEntity /*implements ITickable*/ { // Paper - remove tickable
+ 
+@@ -45,11 +46,13 @@ public class TileEntitySkull extends TileEntity /*implements ITickable*/ { // Pa
+     private int g;
+     private boolean h;
+     // Spigot start
++    /*
+     public static final ExecutorService executor = Executors.newFixedThreadPool(3,
+             new ThreadFactoryBuilder()
+                     .setNameFormat("Head Conversion Thread - %1$d")
+                     .build()
+     );
++    */
+     public static final LoadingCache<String, GameProfile> skinCache = CacheBuilder.newBuilder()
+             .maximumSize( 5000 )
+             .expireAfterAccess( 60, TimeUnit.MINUTES )
+@@ -250,7 +253,7 @@ public class TileEntitySkull extends TileEntity /*implements ITickable*/ { // Pa
+                             throw new RuntimeException(ex); // Not possible
+                         }
+                     } else {
+-                        return executor.submit(callable);
++                        return MCUtil.asyncExecutor.submit(callable);
+                     }
+                 }
+             }
+diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
+index 3c1992e212a6d6f1db4d5b807b38d71913619fc0..2301ccbbe5fbc3cf1513ccdc32bb2c22e0ce0aab 100644
+--- a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
++++ b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftAsyncScheduler.java
+@@ -32,23 +32,30 @@ import java.util.Iterator;
+ import java.util.List;
+ import java.util.concurrent.Executor;
+ import java.util.concurrent.Executors;
++/*
+ import java.util.concurrent.SynchronousQueue;
+ import java.util.concurrent.ThreadPoolExecutor;
+ import java.util.concurrent.TimeUnit;
++*/
++import net.minecraft.server.MCUtil;
+ 
+ public class CraftAsyncScheduler extends CraftScheduler {
+ 
++    /*
+     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(
+             4, Integer.MAX_VALUE,30L, TimeUnit.SECONDS, new SynchronousQueue<>(),
+             new ThreadFactoryBuilder().setNameFormat("Craft Scheduler Thread - %1$d").build());
++    */
+     private final Executor management = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+             .setNameFormat("Craft Async Scheduler Management Thread").build());
+     private final List<CraftTask> temp = new ArrayList<>();
+ 
+     CraftAsyncScheduler() {
+         super(true);
++        /*
+         executor.allowCoreThreadTimeOut(true);
+         executor.prestartAllCoreThreads();
++        */
+     }
+ 
+     @Override
+@@ -93,7 +100,7 @@ public class CraftAsyncScheduler extends CraftScheduler {
+     private boolean executeTask(CraftTask task) {
+         if (isValid(task)) {
+             this.runners.put(task.getTaskId(), task);
+-            this.executor.execute(new ServerSchedulerReportingWrapper(task));
++            MCUtil.asyncExecutor.execute(new ServerSchedulerReportingWrapper(task));
+             return true;
+         }
+         return false;
+diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
+index b650f9b6901f15b7fec7a426cd77660039eecd66..51fc675d93c5a0bcdec3bacac5fdba8a1325e8f1 100644
+--- a/src/main/java/org/spigotmc/WatchdogThread.java
++++ b/src/main/java/org/spigotmc/WatchdogThread.java
+@@ -142,6 +142,7 @@ public class WatchdogThread extends Thread
+     {
+         while ( !stopping )
+         {
++            net.minecraft.server.MCUtil.flushAsyncTasks();
+             // Paper start
+             Logger log = Bukkit.getServer().getLogger();
+             long currentTime = monotonicMillis();

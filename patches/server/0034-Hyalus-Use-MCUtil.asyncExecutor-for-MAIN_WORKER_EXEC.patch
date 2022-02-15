@@ -1,0 +1,103 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Fri, 7 May 2021 18:54:48 -0400
+Subject: [PATCH] (Hyalus) Use MCUtil.asyncExecutor for MAIN_WORKER_EXECUTOR in
+ SystemUtils
+
+Instead of creating a new threadpool for `MAIN_WORKER_EXECUTOR` in `SystemUtils`, this patch makes i$
+
+Original code by Titaniumtown, licensed under GPLv3
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
+
+diff --git a/src/main/java/net/minecraft/SystemUtils.java b/src/main/java/net/minecraft/SystemUtils.java
+index 61b4c42e95994343772a91640b243b8e8224e09b..89a5750c374b57b5b7d2d258cae97e6c611158e9 100644
+--- a/src/main/java/net/minecraft/SystemUtils.java
++++ b/src/main/java/net/minecraft/SystemUtils.java
+@@ -51,6 +51,10 @@ import net.minecraft.util.datafix.DataConverterRegistry;
+ import net.minecraft.world.level.block.state.properties.IBlockState;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import java.util.concurrent.AbstractExecutorService;
++import net.minecraft.server.ServerWorkerWrapper;
++import net.minecraft.server.MCUtil;
++import java.util.Collections;
+ 
+ public class SystemUtils {
+ 
+@@ -95,7 +99,44 @@ public class SystemUtils {
+         if (i <= 0) {
+             object = MoreExecutors.newDirectExecutorService();
+         } else {
+-            object = new java.util.concurrent.ThreadPoolExecutor(i, i,0L, TimeUnit.MILLISECONDS, new java.util.concurrent.LinkedBlockingQueue<Runnable>(), target -> new ServerWorkerThread(target, s, priorityModifier));
++            // object = new java.util.concurrent.ThreadPoolExecutor(i, i,0L, TimeUnit.MILLISECONDS, new java.util.concurrent.LinkedBlockingQueue<Runnable>(), target -> new ServerWorkerThread(target, s, priorityModifier));
++            object = Integer.getInteger("Paper.WorkerThreadCount", i) <= 0 ? MoreExecutors.newDirectExecutorService() : new AbstractExecutorService(){
++                private volatile boolean shutdown = false;
++
++                @Override
++                public final List<Runnable> shutdownNow() {
++                    this.shutdown = true;
++                    return Collections.emptyList();
++                }
++
++                @Override
++                public final void shutdown() {
++                    this.shutdown = true;
++                }
++
++                @Override
++                public final boolean isShutdown() {
++                    return this.shutdown;
++                }
++
++                @Override
++                public final boolean isTerminated() {
++                    return this.shutdown;
++                }
++
++                @Override
++                public final boolean awaitTermination(long l2, TimeUnit timeUnit) throws InterruptedException {
++                    if (!this.shutdown) {
++                        throw new UnsupportedOperationException();
++                    }
++                    return true;
++                }
++
++                @Override
++                public final void execute(Runnable runnable) {
++                    MCUtil.asyncExecutor.execute(new ServerWorkerWrapper(runnable));
++                }
++            };
+         }
+         /*
+                     protected void onTermination(Throwable throwable) {
+diff --git a/src/main/java/net/minecraft/server/ServerWorkerWrapper.java b/src/main/java/net/minecraft/server/ServerWorkerWrapper.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..c872e3e1f5540961c6d20bd4f2242c3555ee959a
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/ServerWorkerWrapper.java
+@@ -0,0 +1,24 @@
++package net.minecraft.server;
++
++import com.google.common.base.Preconditions;
++import net.minecraft.SystemUtils;
++
++public final class ServerWorkerWrapper implements Runnable {
++    private final Runnable internalRunnable;
++
++    public ServerWorkerWrapper(Runnable runnable) {
++        this.internalRunnable = Preconditions.checkNotNull(runnable, "internalRunnable");
++    }
++
++    @Override
++    public final void run() {
++        try {
++            this.internalRunnable.run();
++            return;
++        }
++        catch (Throwable throwable) {
++            SystemUtils.onThreadError(Thread.currentThread(), throwable);
++            return;
++        }
++    }
++}
+\ No newline at end of file

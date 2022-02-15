@@ -1,0 +1,89 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Simon Gardling <titaniumtown@gmail.com>
+Date: Thu, 29 Apr 2021 23:43:23 -0400
+Subject: [PATCH] (Hyalus) LinkedBlockingDeque in IAsyncTaskHandler
+
+Uses `LinkedBlockingDeque` instead of a normal queue inside of `IAsyncTaskHandler`
+
+Original code by Titaniumtown, licensed under GPLv3
+You can find the original code on https://gitlab.com/Titaniumtown/JettPack
+
+diff --git a/src/main/java/net/minecraft/util/thread/IAsyncTaskHandler.java b/src/main/java/net/minecraft/util/thread/IAsyncTaskHandler.java
+index 158ea6d77698d62ba795aff6c061a80652e42e03..0a2666697a94b88189261b223ae046c5a738d14c 100644
+--- a/src/main/java/net/minecraft/util/thread/IAsyncTaskHandler.java
++++ b/src/main/java/net/minecraft/util/thread/IAsyncTaskHandler.java
+@@ -1,20 +1,20 @@
+ package net.minecraft.util.thread;
+ 
+-import com.google.common.collect.Queues;
+-import java.util.Queue;
+ import java.util.concurrent.CompletableFuture;
+ import java.util.concurrent.Executor;
+-import java.util.concurrent.locks.LockSupport;
+ import java.util.function.BooleanSupplier;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import java.util.concurrent.LinkedBlockingDeque;
++import java.util.concurrent.TimeUnit;
+ 
+-public abstract class IAsyncTaskHandler<R extends Runnable> implements Mailbox<R>, Executor {
++public abstract class IAsyncTaskHandler<R extends Runnable> implements Executor, Mailbox<R> {
+ 
+     private final String b;
+     private static final Logger LOGGER = LogManager.getLogger();
+-    private final Queue<R> d = Queues.newConcurrentLinkedQueue();
++    private final LinkedBlockingDeque<R> d = new LinkedBlockingDeque();
+     private int e;
++    private R next = null;
+ 
+     protected IAsyncTaskHandler(String s) {
+         this.b = s;
+@@ -79,7 +79,6 @@ public abstract class IAsyncTaskHandler<R extends Runnable> implements Mailbox<R
+     public final void addTask(R r0) { a(r0); }; // Paper - OBFHELPER
+     public void a(R r0) {
+         this.d.add(r0);
+-        LockSupport.unpark(this.getThread());
+     }
+ 
+     public void execute(Runnable runnable) {
+@@ -99,14 +98,16 @@ public abstract class IAsyncTaskHandler<R extends Runnable> implements Mailbox<R
+     }
+ 
+     protected boolean executeNext() {
+-        R r0 = this.d.peek(); // Paper - decompile fix
++        if (this.next == null && !this.d.isEmpty()) {
++            this.bm();
++        }
+ 
+-        if (r0 == null) {
+-            return false;
+-        } else if (this.e == 0 && !this.canExecute(r0)) {
++        if (this.next == null) {
+             return false;
+         } else {
+-            this.executeTask(this.d.remove()); // Paper - decompile fix
++            R r2 = this.next;
++            this.next = null;
++            this.executeTask(r2);
+             return true;
+         }
+     }
+@@ -127,8 +128,16 @@ public abstract class IAsyncTaskHandler<R extends Runnable> implements Mailbox<R
+     }
+ 
+     protected void bm() {
+-        Thread.yield();
+-        LockSupport.parkNanos("waiting for tasks", 100000L);
++        if (this.next != null) {
++            throw new IllegalStateException("next != null");
++        }
++        try {
++            this.next = this.d.poll(100L, TimeUnit.MICROSECONDS);
++            return;
++        }
++        catch (InterruptedException interruptedException) {
++            return;
++        }
+     }
+ 
+     protected void executeTask(R r0) {
