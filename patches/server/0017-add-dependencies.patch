@@ -5,7 +5,7 @@ Subject: [PATCH] add dependencies
 
 
 diff --git a/pom.xml b/pom.xml
-index af9148c0a4b06af536d9996d9ca29c2345b57ed4..017e2f37b213f57e0c7cff34fd43e04c2aeb85b1 100644
+index b41fead208bc840dc25323acadc7d8b96f942992..ab4cff570cbf826664bb5f348ee640770af44440 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -200,6 +200,12 @@

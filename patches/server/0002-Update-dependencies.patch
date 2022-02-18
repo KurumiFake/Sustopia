@@ -6,7 +6,7 @@ Subject: [PATCH] Update dependencies
 an excessive amount of em, yes
 
 diff --git a/pom.xml b/pom.xml
-index 899184971b5176b58a09689d84dac152b9746af1..36004ff363b230cbd8e73cd5f3cd95304c76c18a 100644
+index 899184971b5176b58a09689d84dac152b9746af1..5113890f5746b3980ad0bd65f1a58def025f88ba 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -37,13 +37,6 @@
@@ -32,15 +32,6 @@ index 899184971b5176b58a09689d84dac152b9746af1..36004ff363b230cbd8e73cd5f3cd9530
          </dependency>
          <!-- Tuinity end - fix compile issue (cannot see new api) by moving netty include BEFORE server jar -->
          <dependency>
-@@ -78,7 +71,7 @@
-         <dependency>
-             <groupId>org.jline</groupId>
-             <artifactId>jline-terminal-jansi</artifactId>
--            <version>3.12.1</version>
-+            <version>3.21.0</version>
-             <scope>runtime</scope>
-         </dependency>
-         <!--
 @@ -106,13 +99,13 @@
          <dependency>
              <groupId>com.lmax</groupId>

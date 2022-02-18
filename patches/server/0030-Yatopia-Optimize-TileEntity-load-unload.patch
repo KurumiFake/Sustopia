@@ -7,7 +7,7 @@ Original code by YatopiaMC, licensed under MIT
 You can find the original code on https://github.com/YatopiaMC/Yatopia
 
 diff --git a/src/main/java/net/minecraft/world/level/World.java b/src/main/java/net/minecraft/world/level/World.java
-index 3a71e5e1cc4e85f1c83faf09b80254c50a404103..167e7e5c9b431721b8401e883125a2080aba1118 100644
+index 8ed6ff1c180fe6dd3b29c476799f6b83af0be007..8d2d1c594225b07bbee966819265026749bbe9c9 100644
 --- a/src/main/java/net/minecraft/world/level/World.java
 +++ b/src/main/java/net/minecraft/world/level/World.java
 @@ -105,8 +105,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {

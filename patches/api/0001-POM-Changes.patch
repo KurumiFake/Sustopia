@@ -7,7 +7,7 @@ Subject: [PATCH] POM Changes
 - update dependencies (an eccessive amount of them)
 
 diff --git a/pom.xml b/pom.xml
-index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..0b8fae2d2eee9b3d3a044eee0a0b276239cf2a38 100644
+index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..f7f73775f2ad5a4c83c5143503f85b5f6b007efa 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -34,6 +34,15 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..0b8fae2d2eee9b3d3a044eee0a0b2762
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
+@@ -22,7 +22,7 @@
+         <maven.compiler.source>1.8</maven.compiler.source>
+         <maven.compiler.target>1.8</maven.compiler.target>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+-        <adventure.version>4.7.0</adventure.version> <!-- Paper - When updating this make sure to update the linked JavaDocs on the homepage as well! -->
++        <adventure.version>4.9.3</adventure.version> <!-- Paper - When updating this make sure to update the linked JavaDocs on the homepage as well! -->
+     </properties>
+ 
+     <repositories>
 @@ -68,7 +68,7 @@
          <dependency>
              <groupId>it.unimi.dsi</groupId>
@@ -48,7 +57,7 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..0b8fae2d2eee9b3d3a044eee0a0b2762
              <groupId>com.google.guava</groupId>
              <artifactId>guava</artifactId>
 -            <version>21.0</version>
-+            <version>27.1-jre</version>
++            <version>31.0.1-jre</version>
              <scope>compile</scope>
          </dependency>
          <!-- bundled with Minecraft, should be kept in sync -->
@@ -60,7 +69,15 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..0b8fae2d2eee9b3d3a044eee0a0b2762
              <scope>compile</scope>
          </dependency>
          <dependency>
-@@ -122,19 +122,19 @@
+@@ -115,26 +115,26 @@
+         <dependency>
+             <groupId>org.yaml</groupId>
+             <artifactId>snakeyaml</artifactId>
+-            <version>1.27</version>
++            <version>1.30</version>
+             <scope>compile</scope>
+         </dependency>
+         <!-- not part of the API proper -->
          <dependency>
              <groupId>org.apache.maven</groupId>
              <artifactId>maven-resolver-provider</artifactId>
@@ -161,7 +178,7 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..0b8fae2d2eee9b3d3a044eee0a0b2762
                  <executions>
                      <execution>
                          <phase>package</phase>
-@@ -273,7 +273,7 @@
+@@ -273,11 +273,11 @@
              <plugin>
                  <groupId>org.apache.maven.plugins</groupId>
                  <artifactId>maven-javadoc-plugin</artifactId>
@@ -170,6 +187,11 @@ index 6fd6066b16d4dbf8695be16ec8b2d135d4d04901..0b8fae2d2eee9b3d3a044eee0a0b2762
                  <configuration>
                      <links>
                          <link>https://guava.dev/releases/21.0/api/docs/</link>
+-                        <link>https://javadoc.io/doc/org.yaml/snakeyaml/1.27/</link>
++                        <link>https://javadoc.io/doc/org.yaml/snakeyaml/1.30/</link>
+                         <link>https://javadoc.io/doc/org.jetbrains/annotations-java5/20.1.0/</link>
+                         <link>https://javadoc.io/doc/net.md-5/bungeecord-chat/1.16-R0.4/</link>
+                         <!-- Paper start -->
 @@ -303,7 +303,7 @@
                      <plugin>
                          <groupId>org.apache.maven.plugins</groupId>
